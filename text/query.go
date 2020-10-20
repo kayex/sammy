@@ -35,16 +35,13 @@ func (q WordQuery) Match(s string) (int, int) {
 		return 0, q.Length()
 	}
 
-	_slen := len(s)
-	fmt.Println(_slen)
-
 	sr := []rune(s)
 	offset := 0
 	for offset < len(sr) {
-		sr = sr[offset:]
-		srs := string(sr)
+		sro := sr[offset:]
+		srs := string(sro)
 		fmt.Println(srs)
-		i := strings.Index(string(sr), q.W)
+		i := strings.Index(string(sr[offset:]), q.W)
 		if i < 0 {
 			break
 		}
@@ -52,21 +49,12 @@ func (q WordQuery) Match(s string) (int, int) {
 		ir := utf8.RuneCountInString(s[:i])
 		// Make sure that any preceding or following characters are valid
 		// WordQuery delimiters.
-		prev, p := at(sr, ir-1)
-		next, n := at(sr, ir+q.Length())
+		prev, p := at(sr, offset + ir - 1)
+		next, n := at(sr, offset + ir + q.Length())
 
-		if p {
-			if !q.Delimiter(prev) {
-				offset += ir + q.Length()
-				continue
-			}
-		}
-
-		if n {
-			if !q.Delimiter(next) {
-				offset += ir + q.Length()
-				continue
-			}
+		if (p && !q.Delimiter(prev)) || (n && !q.Delimiter(next)) {
+			offset += ir + 1
+			continue
 		}
 
 		return offset + ir, q.Length()
@@ -99,7 +87,7 @@ func (q CaseInsensitiveWordQuery) Match(text string) (int, int) {
 // r is a reasonable filename component delimiter.
 func FilenameComponentDelimiter(r rune) bool {
 	switch r {
-	case '_', '-':
+	case '_', '-', '.':
 		return true
 	}
 

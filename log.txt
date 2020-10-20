@@ -1,0 +1,9 @@
+Original filename                 New filename                         
+                                                                       
+samples\sample_Am_1.wav           samples\sample_Amin_1.wav            
+samples\sample_Am_2.wav           samples\sample_Amin_2.wav            
+samples\synth\synth_C_1.wav       samples\synth\synth_Cmaj_1.wav       
+samples\synth\synth_C_2.wav       samples\synth\synth_Cmaj_2.wav       
+samples\bass\bass_Bb_1.wav        samples\bass\bass_BBmaj_1.wav        
+samples\bass\bass_Bb_2 copy.wav   samples\bass\bass_BBmaj_2 copy.wav   
+samples\bass\test_Am_2.wav        samples\bass\test_Amin_2.wav         

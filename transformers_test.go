@@ -35,6 +35,7 @@ func TestExtendMinor(t *testing.T) {
 		{"K4YEX_Dreamy_Synth_Cm_120.wav", "K4YEX_Dreamy_Synth_Cmin_120.wav"},
 		{"K4YEX_Dreamy_Synth_A#m_120.wav", "K4YEX_Dreamy_Synth_A#min_120.wav"},
 		{"K4YEX_Dreamy_Synth_Amin_120.wav", "K4YEX_Dreamy_Synth_Amin_120.wav"},
+		{"C:\\Users\\jv\\Development\\sammy\\samples\\bass\\test_Am_2.wav", "C:\\Users\\jv\\Development\\sammy\\samples\\bass\\test_Amin_2.wav"},
 	}
 
 	for _, c := range cases {
