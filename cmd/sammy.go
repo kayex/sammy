@@ -34,12 +34,12 @@ func main() {
 			os.Exit(0)
 		}
 
-		showError(l, err, debug)
+		handleError(l, err, debug)
 	}
 
 	cs, err := sammy.GenerateChangeSet(l, dir, sammy.ExtendMajor, sammy.ExtendMinor, sammy.NormalizeAccidentals)
 	if err != nil {
-		showError(l, err, debug)
+		handleError(l, err, debug)
 	}
 
 	if len(cs) == 0 {
@@ -52,17 +52,14 @@ func main() {
 		os.Exit(0)
 	}
 
-	/*
-		err = sammy.Rename(cs)
-		if err != nil {
-			showError(err)
-			os.Exit(1)
-		}
-	*/
+	err = sammy.Rename(cs)
+	if err != nil {
+		handleError(l, err, debug)
+	}
 
 	err = printChangeSet(l, dir, cs)
 	if err != nil {
-		showError(l, err, debug)
+		handleError(l, err, debug)
 	}
 
 	if debug {
@@ -70,7 +67,7 @@ func main() {
 	}
 }
 
-func showError(l *log.Logger, err error, debug bool) {
+func handleError(l *log.Logger, err error, debug bool) {
 	dialog.Message("Error: %v", err).Error()
 
 	if debug {
