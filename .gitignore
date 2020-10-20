@@ -6,6 +6,9 @@ bin/
 *.so
 *.dylib
 
+# Log file
+log.txt
+
 # Test binary, built with `go test -c`
 *.test
 
