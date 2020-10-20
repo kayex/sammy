@@ -118,14 +118,14 @@ func writeLog(logFile, dir string, cs map[string]string) error {
 	}
 	defer f.Close()
 
-	w := tabwriter.NewWriter(f, 0, 0, 3, '.', 0)
-	fmt.Fprintf(w, "Original filename\tNew filename\t\n")
-	fmt.Fprintf(w, "\t\t\n")
+	w := tabwriter.NewWriter(f, 0, 0, 3, ' ', 0)
+	fmt.Fprintf(w, "Original filename\tNew filename\n")
+	fmt.Fprintf(w, "\t\n")
 	for o, n := range cs {
 		o := strings.TrimPrefix(o, dir+string(os.PathSeparator))
 		n := strings.TrimPrefix(n, dir+string(os.PathSeparator))
 
-		fmt.Fprintf(w, "%v\t%v\t\n", o, n)
+		fmt.Fprintf(w, "%v\t%v\n", o, n)
 	}
 	w.Flush()
 
