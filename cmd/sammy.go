@@ -22,7 +22,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	cs, err := sammy.GenerateChangeSet(dir, sammy.ExtendMajor, sammy.ExtendMinor)
+	cs, err := sammy.GenerateChangeSet(dir, sammy.ExtendMajor, sammy.ExtendMinor, sammy.NormalizeAccidentals)
 	if err != nil {
 		showError(err)
 		os.Exit(1)
