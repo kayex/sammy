@@ -12,10 +12,8 @@ Below are a few examples of normalizations that sammy performs.
 | Original             | Normalized           |
 | :--------------------| :------------------- |
 | Chords_A_120.wav     | Chords_Amaj_120.wav  |
-| Chords-A-120.wav     | Chords-Amaj-120.wav  |
 | Chords_Am_120.wav    | Chords_Amin_120.wav  |
 | CHORDS-AM-120.wav    | CHORDS-Amin-120.wav  |
-| Chords_Am_120.wav    | Chords_Amin_120.wav  |
 | Chords_Db_120.wav    | Chords_C#maj_120.wav |
 | Chords_Ebmin_120.wav | Chords_D#min_120.wav |
 
