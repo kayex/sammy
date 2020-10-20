@@ -35,8 +35,11 @@ func GenerateChangeSet(l *log.Logger, dir string, tfs ...Transformer) (map[strin
 			return nil
 		}
 
+		l.Printf("Processing %s\n", path)
+
 		trans := path
 		for _, t := range tfs {
+			panic("oops")
 			trans = t(trans)
 		}
 

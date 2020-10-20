@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -21,12 +22,26 @@ var Debug string
 
 func main() {
 	debug := Debug == "true"
+	debug = true
 
 	var l *log.Logger
 	l = log2.Discard()
 	if debug {
 		l = log2.StdErr()
 	}
+
+	defer func(l *log.Logger) {
+		if err := recover(); err != nil {
+			if e, ok := err.(error); ok {
+				handleError(l, e, debug)
+			} else if s, ok := err.(string); ok {
+				e := errors.New(s)
+				handleError(l, e, debug)
+			}
+
+			panic(err)
+		}
+	}(l)
 
 	title := "Select sample directory. Samples in this directory and all sub-directories will be affected."
 	dir, err := dialog.Directory().Title(title).Browse()
@@ -72,8 +87,10 @@ func handleError(l *log.Logger, err error, debug bool) {
 	dialog.Message("Error: %v", err).Error()
 
 	if debug {
-		l.Println(err)
+		l.Printf("Error: %v\n", err)
+		l.Println("Press any key to dump error and exit program.")
 		fmt.Scanf("h")
+		l.Panicln(err)
 	} else {
 		l.Panicln(err)
 	}
