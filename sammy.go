@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -40,7 +41,9 @@ func GenerateChangeSet(l *log.Logger, dir string, tfs ...Transformer) (map[strin
 		}
 
 		if trans != path {
-			l.Printf("%s -> %s\n", path, trans)
+			o := strings.TrimPrefix(path, dir+string(os.PathSeparator))
+			n := strings.TrimPrefix(trans, dir+string(os.PathSeparator))
+			l.Printf("%s -> %s\n", o, n)
 			cs[path] = trans
 			registered++
 		}
