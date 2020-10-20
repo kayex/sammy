@@ -6,7 +6,7 @@ Sammy is a simple tool for normalizing filenames of audio sample files.
 ./build.sh
 ```
 
-# Supported file types
+# Supported file extensions
 - .wav, .wave
 - .flac
 - .mp3, .mp4
