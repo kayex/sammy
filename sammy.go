@@ -68,7 +68,6 @@ func GenerateChangeSet(l *log.Logger, dir string, tfs ...Transformer) (map[strin
 }
 
 func Rename(cs map[string]string) error {
-	return nil
 	for o, n := range cs {
 		err := os.Rename(o, n)
 		if err != nil {
