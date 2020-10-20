@@ -2,41 +2,15 @@ package text
 
 import (
 	"bytes"
-	"strings"
 )
 
 type Mutation interface {
 	Apply(text string) string
 }
 
-type Set struct {
-	Text string
-}
-
-type Sub struct {
-	Search string
-	Sub    string
-}
-
 type SubQuery struct {
 	Search Query
 	Sub    string
-}
-
-type Append struct {
-	Appendix string
-}
-
-type Prepend struct {
-	Prefix string
-}
-
-func (r *Set) Apply(text string) string {
-	return r.Text
-}
-
-func (s *Sub) Apply(text string) string {
-	return strings.Replace(text, s.Search, s.Sub, -1)
 }
 
 func (s *SubQuery) Apply(text string) string {
@@ -56,20 +30,4 @@ func (s *SubQuery) Apply(text string) string {
 	}
 
 	return text
-}
-
-func (a *Append) Apply(text string) string {
-	if len(a.Appendix) == 0 {
-		return text
-	}
-
-	return text + a.Appendix
-}
-
-func (p *Prepend) Apply(text string) string {
-	if len(p.Prefix) == 0 {
-		return text
-	}
-
-	return p.Prefix + text
 }
