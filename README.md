@@ -7,7 +7,7 @@ Sammy tries to normalize filenames by following a few simple rules:
 - Minor keys on the format `Am` will have their suffix changed to "min" (`Am` becomes `Amin`).
 - Keys with a flat key signature will be converted into its corresponding sharp key (`Eb` becomes `D#`).
 
-Below are a few examples of normalizations sammy performs.
+Below are a few examples of normalizations that sammy performs.
 
 | Original             | Normalized           |
 | :--------------------| :------------------- |
