@@ -33,16 +33,18 @@ func main() {
 		os.Exit(0)
 	}
 
-	ok := dialog.Message("%d samples will be renamed in %s.\n\nContinue?", len(cs), dir).Title("Confirm rename").YesNo()
+	ok := dialog.Message("%d %s will be renamed in %s.\n\nContinue?", len(cs), strSamples(len(cs)), dir).Title("Confirm rename").YesNo()
 	if !ok {
 		os.Exit(1)
 	}
 
-	err = sammy.Rename(cs)
-	if err != nil {
-		showError(err)
-		os.Exit(1)
-	}
+	/*
+		err = sammy.Rename(cs)
+		if err != nil {
+			showError(err)
+			os.Exit(1)
+		}
+	*/
 
 	err = printChangeSet(dir, cs)
 	if err != nil {
@@ -62,7 +64,7 @@ func printChangeSet(dir string, cs map[string]string) error {
 		return err
 	}
 
-	dialog.Message("Successfully renamed %d samples.\n\nCheck %s for details.", len(cs), logFile).Title("Rename complete").Info()
+	dialog.Message("Successfully renamed %d %s.\n\nCheck %s for details.", len(cs), strSamples(len(cs)), logFile).Title("Rename complete").Info()
 
 	return nil
 }
@@ -86,4 +88,12 @@ func writeLog(logFile, dir string, cs map[string]string) error {
 	w.Flush()
 
 	return nil
+}
+
+func strSamples(count int) string {
+	if count == 1 {
+		return "sample"
+	}
+
+	return "samples"
 }
