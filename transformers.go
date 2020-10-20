@@ -37,8 +37,6 @@ func NormalizeAccidentals(s string) string {
 }
 
 func ExtendMajor(s string) string {
-	os := s
-	fmt.Println(os)
 	for _, n := range keys() {
 		q := &text.SubQuery{
 			Search: text.CaseInsensitiveWordQuery{

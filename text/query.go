@@ -1,7 +1,6 @@
 package text
 
 import (
-	"fmt"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -38,9 +37,6 @@ func (q WordQuery) Match(s string) (int, int) {
 	sr := []rune(s)
 	offset := 0
 	for offset < len(sr) {
-		sro := sr[offset:]
-		srs := string(sro)
-		fmt.Println(srs)
 		i := strings.Index(string(sr[offset:]), q.W)
 		if i < 0 {
 			break
@@ -49,8 +45,8 @@ func (q WordQuery) Match(s string) (int, int) {
 		ir := utf8.RuneCountInString(s[:i])
 		// Make sure that any preceding or following characters are valid
 		// WordQuery delimiters.
-		prev, p := at(sr, offset + ir - 1)
-		next, n := at(sr, offset + ir + q.Length())
+		prev, p := at(sr, offset+ir-1)
+		next, n := at(sr, offset+ir+q.Length())
 
 		if (p && !q.Delimiter(prev)) || (n && !q.Delimiter(next)) {
 			offset += ir + 1
