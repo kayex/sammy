@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 )
 
+// Debug indicates whether debug log levels should be used and should be set at compile time.
 var Debug string
 
 func main() {
