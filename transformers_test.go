@@ -14,6 +14,8 @@ func TestExtendMajor(t *testing.T) {
 		{"K4YEX_Dreamy_Synth_C_120.wav", "K4YEX_Dreamy_Synth_Cmaj_120.wav"},
 		{"K4YEX_Dreamy_Synth_A#_120.wav", "K4YEX_Dreamy_Synth_A#maj_120.wav"},
 		{"K4YEX_Dreamy_Synth_Amaj_120.wav", "K4YEX_Dreamy_Synth_Amaj_120.wav"},
+		{"Z:\\Sound Library\\User Library\\Splice Sounds - Shigeto繁登Custom_Sounds繁登Found_Sounds繁登_SpringinProvence.wav", "Z:\\Sound Library\\User Library\\Splice Sounds - Shigeto繁登Custom_Sounds繁登Found_Sounds繁登_SpringinProvence.wav"},
+		{"繁", "繁"},
 	}
 
 	for _, c := range cases {

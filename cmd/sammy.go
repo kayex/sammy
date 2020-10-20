@@ -68,10 +68,12 @@ func main() {
 		os.Exit(0)
 	}
 
-	err = sammy.Rename(cs)
-	if err != nil {
-		handleError(l, err, debug)
-	}
+	/*
+		err = sammy.Rename(cs)
+		if err != nil {
+			handleError(l, err, debug)
+		}
+	*/
 
 	err = printChangeSet(l, dir, cs)
 	if err != nil {

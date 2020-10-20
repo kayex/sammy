@@ -14,7 +14,12 @@ type SubQuery struct {
 }
 
 func (s *SubQuery) Apply(text string) string {
-	for i, ln := s.Search.Match(text); i >= 0; i, ln = s.Search.Match(text) {
+	for {
+		i, ln := s.Search.Match(text)
+		if i < 0 {
+			return text
+		}
+
 		tr := []rune(text)
 
 		beginning := tr[:i]
@@ -28,6 +33,4 @@ func (s *SubQuery) Apply(text string) string {
 
 		text = buf.String()
 	}
-
-	return text
 }

@@ -35,25 +35,28 @@ func (q WordQuery) Match(s string) (int, int) {
 	}
 
 	sr := []rune(s)
+
 	offset := 0
 	for offset < len(sr) {
-		i := strings.Index(string(sr[offset:]), q.W)
+		so := string(sr[offset:])
+		i := strings.Index(so, q.W)
 		if i < 0 {
 			break
 		}
 
-		ir := utf8.RuneCountInString(s[:i])
 		// Make sure that any preceding or following characters are valid
 		// WordQuery delimiters.
-		prev, p := at(sr, offset+ir-1)
-		next, n := at(sr, offset+ir+q.Length())
+		prev, p := atByte(s, offset+i-1)
+		next, n := atByte(s, offset+i+len(q.W))
 
-		if (p && !q.Delimiter(prev)) || (n && !q.Delimiter(next)) {
-			offset += ir + 1
+		if (p && !q.Delimiter(rune(prev))) || (n && !q.Delimiter(rune(next))) {
+			offset += i + len(q.W)
 			continue
 		}
 
-		return offset + ir, q.Length()
+		ti := utf8.RuneCountInString(s[:offset+i])
+
+		return ti, q.Length()
 	}
 
 	return -1, 0
@@ -104,8 +107,18 @@ func WordDelimiter(r rune) bool {
 	return false
 }
 
-// at returns the rune at index i, and a bool indicating if i exists in s.
-func at(s []rune, i int) (rune, bool) {
+// atRune returns the rune at rune index i, and a bool indicating if i exists in s.
+func atRune(s []rune, i int) (rune, bool) {
+	if i < 0 || i > len(s)-1 {
+		return 0, false
+	}
+
+	r := s[i]
+	return r, true
+}
+
+// atByte returns the byte at index i, and a bool indicating if i exists in s.
+func atByte(s string, i int) (byte, bool) {
 	if i < 0 || i > len(s)-1 {
 		return 0, false
 	}
