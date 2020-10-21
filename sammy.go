@@ -67,15 +67,44 @@ func GenerateChangeSet(l *log.Logger, dir string, tfs ...Transformer) (map[strin
 	return cs, nil
 }
 
-func Rename(cs map[string]string) error {
+type RenameError struct {
+	OriginalPath string
+	NewPath      string
+	Err          error
+}
+
+func (re RenameError) Error() string {
+	return re.Err.Error()
+}
+
+type RenameErrors struct {
+	Errors []RenameError
+}
+
+func (re RenameErrors) Check() bool {
+	return len(re.Errors) == 0
+}
+
+func (re RenameErrors) Error() string {
+	return fmt.Sprintf("Failed to rename %d files.", len(re.Errors))
+}
+
+func Rename(cs map[string]string) RenameErrors {
+	var errs []RenameError
+
 	for o, n := range cs {
 		err := os.Rename(o, n)
 		if err != nil {
-			return fmt.Errorf("failed renaming %s: %v", o, err)
+			e := RenameError{
+				OriginalPath: o,
+				NewPath:      n,
+				Err:          err,
+			}
+			errs = append(errs, e)
 		}
 	}
 
-	return nil
+	return RenameErrors{errs}
 }
 
 // sample returns a bool indicating if path is an audio sample file.

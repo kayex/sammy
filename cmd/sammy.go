@@ -68,19 +68,26 @@ func main() {
 		os.Exit(0)
 	}
 
-	err = sammy.Rename(cs)
+	errs := sammy.Rename(cs)
+	if !errs.Check() {
+		handleWarning(l, errs, debug)
+	}
+
+	err = printChangeSet(l, dir, cs, errs)
 	if err != nil {
 		handleError(l, err, debug)
 	}
 
-	err = printChangeSet(l, dir, cs)
-	if err != nil {
-		handleError(l, err, debug)
-	}
-
+	fmt.Printf("Successfully renamed %d samples.\n", len(cs)-len(errs.Errors))
 	if debug {
+		fmt.Println("Press any key to continue.")
 		fmt.Scanf("h")
 	}
+}
+
+func handleWarning(l *log.Logger, err error, debug bool) {
+	dialog.Message("Error: %v", err).Error()
+	l.Printf("Error: %v\n", err)
 }
 
 func handleError(l *log.Logger, err error, debug bool) {
@@ -90,26 +97,29 @@ func handleError(l *log.Logger, err error, debug bool) {
 		l.Printf("Error: %v\n", err)
 		l.Println("Press any key to dump error and exit program.")
 		fmt.Scanf("h")
-		l.Panicln(err)
+		fmt.Println(err)
 	} else {
-		l.Panicln(err)
+		fmt.Println(err)
 	}
+
+	os.Exit(1)
 }
 
-func printChangeSet(l *log.Logger, dir string, cs map[string]string) error {
+func printChangeSet(l *log.Logger, dir string, cs map[string]string, errs sammy.RenameErrors) error {
 	logFile := filepath.Join(dir, fmt.Sprintf("sammy-log-%d.txt", time.Now().Unix()))
-	err := writeLog(logFile, dir, cs)
+	err := writeLog(logFile, dir, cs, errs)
 	if err != nil {
 		return err
 	}
 
 	l.Printf("Wrote log file to %v", logFile)
-	dialog.Message("Successfully renamed %d %s.\n\nCheck %s for details.", len(cs), strSamples(len(cs)), logFile).Title("Rename complete").Info()
+	c := len(cs) - len(errs.Errors)
+	dialog.Message("Successfully renamed %d %s.\n\nCheck %s for details.", c, strSamples(c), logFile).Title("Rename complete").Info()
 
 	return nil
 }
 
-func writeLog(logFile, dir string, cs map[string]string) error {
+func writeLog(logFile, dir string, cs map[string]string, errs sammy.RenameErrors) error {
 	f, err := os.Create(logFile)
 	if err != nil {
 		return fmt.Errorf("could not create log file: %v", err)
@@ -117,13 +127,21 @@ func writeLog(logFile, dir string, cs map[string]string) error {
 	defer f.Close()
 
 	w := tabwriter.NewWriter(f, 0, 0, 3, ' ', 0)
-	fmt.Fprintf(w, "Original filename\tNew filename\n")
-	fmt.Fprintf(w, "\t\n")
+	fmt.Fprintf(w, "Status\tOriginal filename\tNew filename\n")
+	fmt.Fprintf(w, "\t\t\n")
 	for o, n := range cs {
+		status := "SUCCESS"
+		for _, e := range errs.Errors {
+			if e.OriginalPath == o {
+				status = "FAILED"
+				break
+			}
+		}
+
 		o := strings.TrimPrefix(o, dir+string(os.PathSeparator))
 		n := strings.TrimPrefix(n, dir+string(os.PathSeparator))
 
-		fmt.Fprintf(w, "%v\t%v\n", o, n)
+		fmt.Fprintf(w, "%s\t%v\t%v\n", status, o, n)
 	}
 	w.Flush()
 
