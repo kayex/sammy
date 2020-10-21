@@ -37,16 +37,18 @@ func GenerateChangeSet(l *log.Logger, dir string, tfs ...Transformer) (map[strin
 
 		l.Printf("Processing %s\n", path)
 
-		trans := path
+		dir := filepath.Dir(path)
+		original := filepath.Base(path)
+		filename := original
 		for _, t := range tfs {
-			trans = t(trans)
+			filename = t(filename)
 		}
 
-		if trans != path {
-			o := strings.TrimPrefix(path, dir+string(os.PathSeparator))
-			n := strings.TrimPrefix(trans, dir+string(os.PathSeparator))
+		if filename != original {
+			o := strings.TrimPrefix(filepath.Join(dir, original), dir+string(os.PathSeparator))
+			n := strings.TrimPrefix(filepath.Join(dir, filename), dir+string(os.PathSeparator))
 			l.Printf("%s -> %s\n", o, n)
-			cs[path] = trans
+			cs[path] = filepath.Join(dir, filename)
 			registered++
 		}
 
