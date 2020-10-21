@@ -68,43 +68,46 @@ func GenerateChangeSet(l *log.Logger, dir string, tfs ...Transformer) (map[strin
 }
 
 type RenameError struct {
-	OriginalPath string
-	NewPath      string
-	Err          error
+	NewPath string
+	Err     error
 }
 
 func (re RenameError) Error() string {
 	return re.Err.Error()
 }
 
-type RenameErrors struct {
-	Errors []RenameError
-}
+type RenameErrors map[string]RenameError
 
 func (re RenameErrors) Check() bool {
-	return len(re.Errors) == 0
+	return len(re) == 0
 }
 
 func (re RenameErrors) Error() string {
-	return fmt.Sprintf("Failed to rename %d files.", len(re.Errors))
+	c := len(re)
+	return fmt.Sprintf("failed renaming %d %s", c, StrSamples(c))
 }
 
-func Rename(cs map[string]string) RenameErrors {
-	var errs []RenameError
+func Rename(l *log.Logger, cs map[string]string) RenameErrors {
+	var errs = make(RenameErrors)
 
 	for o, n := range cs {
 		err := os.Rename(o, n)
 		if err != nil {
-			e := RenameError{
-				OriginalPath: o,
-				NewPath:      n,
-				Err:          err,
+			if e, ok := err.(*os.LinkError); ok {
+				err = e.Err
 			}
-			errs = append(errs, e)
+
+			re := RenameError{
+				NewPath: n,
+				Err:     err,
+			}
+			errs[o] = re
+
+			l.Printf("Failed renaming %s: %v\n", o, re.Err.Error())
 		}
 	}
 
-	return RenameErrors{errs}
+	return errs
 }
 
 // sample returns a bool indicating if path is an audio sample file.
@@ -117,4 +120,13 @@ func sample(path string) bool {
 	}
 
 	return false
+}
+
+// StrSamples returns the word "sample" pluralized according to count.
+func StrSamples(count int) string {
+	if count == 1 {
+		return "sample"
+	}
+
+	return "samples"
 }

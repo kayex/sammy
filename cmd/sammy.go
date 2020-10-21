@@ -63,12 +63,13 @@ func main() {
 		os.Exit(0)
 	}
 
-	ok := dialog.Message("%d %s will be renamed in %s.\n\nContinue?", len(cs), strSamples(len(cs)), dir).Title("Confirm rename").YesNo()
+	ok := dialog.Message("%d %s will be renamed in %s.\n\nContinue?", len(cs), sammy.StrSamples(len(cs)), dir).Title("Confirm rename").YesNo()
 	if !ok {
 		os.Exit(0)
 	}
 
-	errs := sammy.Rename(cs)
+	l.Printf("Renaming %d samples. This may take a while...", len(cs))
+	errs := sammy.Rename(l, cs)
 	if !errs.Check() {
 		handleWarning(l, errs, debug)
 	}
@@ -78,7 +79,7 @@ func main() {
 		handleError(l, err, debug)
 	}
 
-	fmt.Printf("Successfully renamed %d samples.\n", len(cs)-len(errs.Errors))
+	fmt.Printf("Successfully renamed %d samples.\n", len(cs)-len(errs))
 	if debug {
 		fmt.Println("Press any key to continue.")
 		fmt.Scanf("h")
@@ -113,8 +114,8 @@ func printChangeSet(l *log.Logger, dir string, cs map[string]string, errs sammy.
 	}
 
 	l.Printf("Wrote log file to %v", logFile)
-	c := len(cs) - len(errs.Errors)
-	dialog.Message("Successfully renamed %d %s.\n\nCheck %s for details.", c, strSamples(c), logFile).Title("Rename complete").Info()
+	c := len(cs) - len(errs)
+	dialog.Message("Successfully renamed %d %s.\n\nLog file can be found in:\n\n%s", c, sammy.StrSamples(c), logFile).Title("Rename complete").Info()
 
 	return nil
 }
@@ -127,31 +128,22 @@ func writeLog(logFile, dir string, cs map[string]string, errs sammy.RenameErrors
 	defer f.Close()
 
 	w := tabwriter.NewWriter(f, 0, 0, 3, ' ', 0)
-	fmt.Fprintf(w, "Status\tOriginal filename\tNew filename\n")
-	fmt.Fprintf(w, "\t\t\n")
+	fmt.Fprintf(w, "Status\tOriginal filename\tNew filename\tError\n")
+	fmt.Fprintf(w, "\t\t\t\n")
 	for o, n := range cs {
 		status := "SUCCESS"
-		for _, e := range errs.Errors {
-			if e.OriginalPath == o {
-				status = "FAILED"
-				break
-			}
+		errMsg := ""
+		if e, ok := errs[o]; ok {
+			status = "FAILED"
+			errMsg = fmt.Sprintf("%v", e.Err)
 		}
 
-		o := strings.TrimPrefix(o, dir+string(os.PathSeparator))
-		n := strings.TrimPrefix(n, dir+string(os.PathSeparator))
+		ot := strings.TrimPrefix(o, dir+string(os.PathSeparator))
+		nt := strings.TrimPrefix(n, dir+string(os.PathSeparator))
 
-		fmt.Fprintf(w, "%s\t%v\t%v\n", status, o, n)
+		fmt.Fprintf(w, "%s\t%v\t%v\t%v\n", status, ot, nt, errMsg)
 	}
 	w.Flush()
 
 	return nil
-}
-
-func strSamples(count int) string {
-	if count == 1 {
-		return "sample"
-	}
-
-	return "samples"
 }
