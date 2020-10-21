@@ -5,7 +5,7 @@ Sammy is a simple tool for normalizing audio sample filenames.
 Sammy tries to normalize filenames by following a few simple rules:
 - Naked keys are assumed to be major and will be suffixed with "maj" (`A` becomes `Amaj`).
 - Minor keys on the format `Am` will have their suffix changed to "min" (`Am` becomes `Amin`).
-- Keys with a flat key signature will be converted into the corresponding sharp key (`Eb` becomes `D#`).
+- Keys with flat key signatures will be converted into the corresponding sharp keys (`Eb` becomes `D#`).
 
 Below are a few examples of normalizations that sammy performs.
 
