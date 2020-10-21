@@ -4,82 +4,82 @@ import (
 	"testing"
 )
 
-func TestWordQuery_Match(t *testing.T) {
+func TestWord_Match(t *testing.T) {
 	cases := []struct {
 		s  string
-		q  WordQuery
+		q  Word
 		i  int
 		ln int
 	}{
 		{
 			s:  "foo",
-			q:  Word("foo"),
+			q:  NewWord("foo"),
 			i:  0,
 			ln: 3,
 		},
 		{
 			s:  "foo bar",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  4,
 			ln: 3,
 		},
 		{
 			s:  "foo barbaz",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  -1,
 			ln: 0,
 		},
 		{
 			s:  "foobar baz",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  -1,
 			ln: 0,
 		},
 		{
 			s:  "foo bar",
-			q:  Word("FOO"),
+			q:  NewWord("FOO"),
 			i:  -1,
 			ln: 0,
 		},
 		{
 			s:  "FOO BAR",
-			q:  Word("foo"),
+			q:  NewWord("foo"),
 			i:  -1,
 			ln: 0,
 		},
 		{
 			s:  "foo\tbar",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  4,
 			ln: 3,
 		},
 		{
 			s:  "foo\nbar",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  4,
 			ln: 3,
 		},
 		{
 			s:  "foo\vbar",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  4,
 			ln: 3,
 		},
 		{
 			s:  "foo\fbar",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  4,
 			ln: 3,
 		},
 		{
 			s:  "foo\rbar",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  4,
 			ln: 3,
 		},
 		{
 			s:  "åäö bar",
-			q:  Word("bar"),
+			q:  NewWord("bar"),
 			i:  4,
 			ln: 3,
 		},
@@ -89,15 +89,15 @@ func TestWordQuery_Match(t *testing.T) {
 		i, ln := c.q.Match(c.s)
 
 		if i != c.i || ln != c.ln {
-			t.Errorf("Expected Word(%q).Match(%q) to return (%v, %v) got (%v, %v)", c.q.W, c.s, c.i, c.ln, i, ln)
+			t.Errorf("Expected NewWord(%q).Match(%q) to return (%v, %v) got (%v, %v)", c.q.W, c.s, c.i, c.ln, i, ln)
 		}
 	}
 }
 
-func TestCaseInsensitiveWordQuery_Match(t *testing.T) {
+func TestCaseInsensitiveWord_Match(t *testing.T) {
 	cases := []struct {
 		s  string
-		q  CaseInsensitiveWordQuery
+		q  CaseInsensitiveWord
 		i  int
 		ln int
 	}{
@@ -131,7 +131,7 @@ func TestCaseInsensitiveWordQuery_Match(t *testing.T) {
 // This benchmark gives a good indication of the average performance of an
 // unsuccessful search.
 func BenchmarkWord_MatchNotExist_6_587(b *testing.B) {
-	w := Word("foobar")
+	w := NewWord("foobar")
 
 	txt := `Lorem ipsum dolor sit amet, an cum vero soleat concludaturque, te purto vero reprimique vis.
 	Ignota mediocritatem ut sea. Cetero deserunt pericula te vel. Omnis legendos no per.
@@ -153,7 +153,7 @@ func BenchmarkWord_MatchNotExist_6_587(b *testing.B) {
 // This benchmark gives a good indication of the worst case performance
 // of an unsuccessful search.
 func BenchmarkWord_MatchPartials_6_587(b *testing.B) {
-	w := Word("foobar")
+	w := NewWord("foobar")
 
 	txt := `fooba fooba fooba fooba fooba fooba fooba fooba fooba fooba
 		fooba fooba fooba fooba fooba fooba fooba fooba fooba fooba
@@ -177,7 +177,7 @@ func BenchmarkWord_MatchPartials_6_587(b *testing.B) {
 // 6 against a search text of length 587, where the sought string is at the
 // very end of the search text.
 func BenchmarkWord_MatchExist_6_587(b *testing.B) {
-	w := Word("foobar")
+	w := NewWord("foobar")
 
 	txt := `Lorem ipsum dolor sit amet, an cum vero soleat concludaturque, te purto vero reprimique vis.
 	Ignota mediocritatem ut sea. Cetero deserunt pericula te vel. Omnis legendos no per.

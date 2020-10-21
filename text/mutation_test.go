@@ -5,27 +5,27 @@ import "testing"
 func TestSubWord_Apply(t *testing.T) {
 	cases := []struct {
 		str string
-		sw  SubQuery
+		sw  ReplaceQuery
 		exp string
 	}{
 		{
 			str: "foo bar",
-			sw:  SubQuery{Word("bar"), "boo"},
+			sw:  ReplaceQuery{NewWord("bar"), "boo"},
 			exp: "foo boo",
 		},
 		{
 			str: "foo åäö",
-			sw:  SubQuery{Word("foo"), "bar"},
+			sw:  ReplaceQuery{NewWord("foo"), "bar"},
 			exp: "bar åäö",
 		},
 		{
 			str: "foo åäö",
-			sw:  SubQuery{Word("åäö"), "bar"},
+			sw:  ReplaceQuery{NewWord("åäö"), "bar"},
 			exp: "foo bar",
 		},
 		{
 			str: "foo barbaz",
-			sw:  SubQuery{Word("foo"), "long replacement"},
+			sw:  ReplaceQuery{NewWord("foo"), "long replacement"},
 			exp: "long replacement barbaz",
 		},
 	}
@@ -34,7 +34,7 @@ func TestSubWord_Apply(t *testing.T) {
 		act := c.sw.Apply(c.str)
 
 		if act != c.exp {
-			t.Errorf("Expected SubQuery{%#v, %q}.Apply(%q) to return %q, got %q", c.sw.Search, c.sw.Sub, c.str, c.exp, act)
+			t.Errorf("Expected SubQuery{%#v, %q}.Apply(%q) to return %q, got %q", c.sw.Search, c.sw.Replacement, c.str, c.exp, act)
 		}
 	}
 }

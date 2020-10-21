@@ -8,12 +8,12 @@ type Mutation interface {
 	Apply(text string) string
 }
 
-type SubQuery struct {
+type ReplaceQuery struct {
 	Search Query
-	Sub    string
+	Replacement    string
 }
 
-func (s *SubQuery) Apply(text string) string {
+func (s *ReplaceQuery) Apply(text string) string {
 	for {
 		i, ln := s.Search.Match(text)
 		if i < 0 {
@@ -28,7 +28,7 @@ func (s *SubQuery) Apply(text string) string {
 		var buf bytes.Buffer
 
 		buf.WriteString(string(beginning))
-		buf.WriteString(s.Sub)
+		buf.WriteString(s.Replacement)
 		buf.WriteString(string(end))
 
 		text = buf.String()

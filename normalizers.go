@@ -20,14 +20,14 @@ func NormalizeAccidentals(s string) string {
 	}
 
 	for search, replace := range replacements {
-		q := &text.SubQuery{
-			Search: text.CaseInsensitiveWordQuery{
-				WordQuery: text.WordQuery{
+		q := &text.ReplaceQuery{
+			Search: text.CaseInsensitiveWord{
+				Word: text.Word{
 					W:         search,
 					Delimiter: text.FilenameComponentDelimiter,
 				},
 			},
-			Sub: replace,
+			Replacement: replace,
 		}
 
 		s = q.Apply(s)
@@ -38,14 +38,14 @@ func NormalizeAccidentals(s string) string {
 
 func ExtendMajor(s string) string {
 	for _, n := range keys() {
-		q := &text.SubQuery{
-			Search: text.CaseInsensitiveWordQuery{
-				WordQuery: text.WordQuery{
+		q := &text.ReplaceQuery{
+			Search: text.CaseInsensitiveWord{
+				Word: text.Word{
 					W:         n,
 					Delimiter: text.FilenameComponentDelimiter,
 				},
 			},
-			Sub: major(n),
+			Replacement: major(n),
 		}
 
 		s = q.Apply(s)
@@ -56,14 +56,14 @@ func ExtendMajor(s string) string {
 
 func ExtendMinor(s string) string {
 	for _, n := range keys() {
-		q := &text.SubQuery{
-			Search: text.CaseInsensitiveWordQuery{
-				WordQuery: text.WordQuery{
+		q := &text.ReplaceQuery{
+			Search: text.CaseInsensitiveWord{
+				Word: text.Word{
 					W:         fmt.Sprintf("%sm", n),
 					Delimiter: text.FilenameComponentDelimiter,
 				},
 			},
-			Sub: minor(n),
+			Replacement: minor(n),
 		}
 
 		s = q.Apply(s)

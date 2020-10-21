@@ -10,22 +10,22 @@ type Query interface {
 	Match(string) (i int, l int)
 }
 
-// WordQuery matches the first occurrence of W in a search text where W is
-// surrounded by delimiters as defined by Delimiter.
-type WordQuery struct {
+// Word matches the first occurrence of W in a search text where W is
+// surrounded by delimiters that satisfy Delimiter.
+type Word struct {
 	W         string
 	Delimiter func(rune) bool
 }
 
-func Word(w string) WordQuery {
+func NewWord(w string) Word {
 	if len(w) == 0 {
 		panic("Cannot create WordQuery of length 0")
 	}
 
-	return WordQuery{w, WordDelimiter}
+	return Word{w, WordDelimiter}
 }
 
-func (q WordQuery) Match(s string) (int, int) {
+func (q Word) Match(s string) (int, int) {
 	if len(s) == 0 {
 		return -1, 0
 	}
@@ -63,23 +63,23 @@ func (q WordQuery) Match(s string) (int, int) {
 
 }
 
-func (q WordQuery) Length() int {
+func (q Word) Length() int {
 	return utf8.RuneCountInString(q.W)
 }
 
-type CaseInsensitiveWordQuery struct {
-	WordQuery
+type CaseInsensitiveWord struct {
+	Word
 }
 
-func IWord(w string) CaseInsensitiveWordQuery {
-	return CaseInsensitiveWordQuery{Word(w)}
+func IWord(w string) CaseInsensitiveWord {
+	return CaseInsensitiveWord{NewWord(w)}
 }
 
-func (q CaseInsensitiveWordQuery) Match(text string) (int, int) {
+func (q CaseInsensitiveWord) Match(text string) (int, int) {
 	sl := strings.ToLower(text)
 	q.W = strings.ToLower(q.W)
 
-	return q.WordQuery.Match(sl)
+	return q.Word.Match(sl)
 }
 
 // FilenameComponentDelimiter returns a bool indicating if
