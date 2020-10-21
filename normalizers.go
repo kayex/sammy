@@ -9,10 +9,9 @@ import (
 type Normalizer func(string) string
 
 func NormalizeAccidentals(s string) string {
-	accidentals := flats
 	replacements := make(map[string]string)
 
-	for _, a := range accidentals {
+	for _, a := range flats {
 		m := flatMirror[a]
 		replacements[a] = m
 		replacements[major(a)] = major(m)
@@ -37,15 +36,15 @@ func NormalizeAccidentals(s string) string {
 }
 
 func ExtendMajor(s string) string {
-	for _, n := range keys() {
+	for _, k := range keys() {
 		q := &text.ReplaceQuery{
 			Search: text.CaseInsensitiveWord{
 				Word: text.Word{
-					W:         n,
+					W:         k,
 					Delimiter: text.FilenameComponentDelimiter,
 				},
 			},
-			Replacement: major(n),
+			Replacement: major(k),
 		}
 
 		s = q.Apply(s)
@@ -55,15 +54,15 @@ func ExtendMajor(s string) string {
 }
 
 func ExtendMinor(s string) string {
-	for _, n := range keys() {
+	for _, k := range keys() {
 		q := &text.ReplaceQuery{
 			Search: text.CaseInsensitiveWord{
 				Word: text.Word{
-					W:         fmt.Sprintf("%sm", n),
+					W:         fmt.Sprintf("%sm", k),
 					Delimiter: text.FilenameComponentDelimiter,
 				},
 			},
-			Replacement: minor(n),
+			Replacement: minor(k),
 		}
 
 		s = q.Apply(s)
