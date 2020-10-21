@@ -22,7 +22,6 @@ var Debug string
 
 func main() {
 	debug := Debug == "true"
-	debug = true
 
 	var l *log.Logger
 	l = log2.Discard()
