@@ -23,7 +23,7 @@ Below are a few examples of normalizations that sammy performs.
 ./build.sh
 ```
 
-To enable debug console, build using
+To enable the debug console, build using
 ```sh
 ./build.sh debug
 ```
