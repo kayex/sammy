@@ -9,8 +9,8 @@ type Mutation interface {
 }
 
 type ReplaceQuery struct {
-	Search Query
-	Replacement    string
+	Search      Query
+	Replacement string
 }
 
 func (s *ReplaceQuery) Apply(text string) string {
