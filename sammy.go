@@ -14,7 +14,7 @@ var SupportedFileExtensions []string = []string{".wav", ".wave", ".flac", ".mp3"
 
 // GenerateChangeSet returns a map of filenames and their transformed counterparts
 // after applying the transformers in tfs recursively to all files in dir.
-func GenerateChangeSet(l *log.Logger, dir string, tfs ...Transformer) (map[string]string, error) {
+func GenerateChangeSet(l *log.Logger, dir string, tfs ...Normalizer) (map[string]string, error) {
 	l.Printf("Indexing %s\n", dir)
 	cs := make(map[string]string)
 

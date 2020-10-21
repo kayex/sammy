@@ -6,7 +6,7 @@ import (
 	"github.com/kayex/sammy/text"
 )
 
-type Transformer func(string) string
+type Normalizer func(string) string
 
 func NormalizeAccidentals(s string) string {
 	accidentals := flats
@@ -45,7 +45,7 @@ func ExtendMajor(s string) string {
 					Delimiter: text.FilenameComponentDelimiter,
 				},
 			},
-			Sub: fmt.Sprintf("%smaj", n),
+			Sub: major(n),
 		}
 
 		s = q.Apply(s)
@@ -63,7 +63,7 @@ func ExtendMinor(s string) string {
 					Delimiter: text.FilenameComponentDelimiter,
 				},
 			},
-			Sub: fmt.Sprintf("%smin", n),
+			Sub: minor(n),
 		}
 
 		s = q.Apply(s)
