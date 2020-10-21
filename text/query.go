@@ -44,16 +44,15 @@ func (q Word) Match(s string) (int, int) {
 			break
 		}
 
-		// Make sure that any preceding or following characters are valid
-		// WordQuery delimiters.
+		// Make sure that any preceding or following characters are valid delimiters.
 		prev, p := atByte(s, offset+i-1)
 		next, n := atByte(s, offset+i+len(q.W))
-
 		if (p && !q.Delimiter(rune(prev))) || (n && !q.Delimiter(rune(next))) {
 			offset += i + len(q.W)
 			continue
 		}
 
+		// Get true rune index in s.
 		ti := utf8.RuneCountInString(s[:offset+i])
 
 		return ti, q.Length()
