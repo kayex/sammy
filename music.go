@@ -7,17 +7,19 @@ var sharps = []string{"A#", "C#", "D#", "F#", "G#"}
 var flats = []string{"Ab", "Bb", "Db", "Eb", "Gb"}
 
 var sharpMirror = map[string]string{
-	"A#": "Bb",
 	"C#": "Db",
 	"D#": "Eb",
+	"F#": "Gb",
 	"G#": "Ab",
+	"A#": "Bb",
 }
 
 var flatMirror = map[string]string{
-	"Bb": "A#",
 	"Db": "C#",
 	"Eb": "D#",
+	"Gb": "F#",
 	"Ab": "G#",
+	"Bb": "A#",
 }
 
 func keys() []string {
